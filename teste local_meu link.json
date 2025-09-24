@@ -1,0 +1,83 @@
+{
+  "name": "teste local/meu link",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "random-number",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        32
+      ],
+      "id": "701b2154-ae02-41ea-b025-5b23ffa171f3",
+      "name": "Webhook",
+      "webhookId": "6082dc34-a5fb-4311-842c-7020c55ec84c"
+    },
+    {
+      "parameters": {
+        "jsCode": "const minRaw =  $json[\"query\"][\"min\"];\nconst maxRaw =  $json[\"query\"][\"max\"];\n\n// Verifica se os valores existem\nif (minRaw === undefined || maxRaw === undefined) {\n  throw new Error(\"Parâmetros 'min' e 'max' são obrigatórios.\");\n}\n\n// Verifica se são apenas numeros inteiros (sem letras, espaços, etc.)\nconst isNumeric = (value) => /^-?\\d+$/.test(value);\n\nif (!isNumeric(minRaw) || !isNumeric(maxRaw)) {\n  throw new Error(\"Dados inválidos. Somente números inteiros são permitidos.\");\n}\n\nconst min = parseInt(minRaw);\nconst max = parseInt(maxRaw);\n\n// Verifica se min é menor que max\nif (min >= max) {\n  throw new Error(\"'min' deve ser menor que 'max'.\");\n}\n\n// Gera número aleatório\nconst random = Math.floor(Math.random() * (max - min + 1)) + min;\n\nreturn {\n  json: {\n    numeroAleatorio: $json[\"response\"]\n  }\n};\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        32
+      ],
+      "id": "2fe0dcda-253a-4eef-8f87-62e8b39e88f1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -16,
+        32
+      ],
+      "id": "9d88c6aa-e0aa-4485-b797-0c834894997f",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b89cfe9c-b4ac-4f0b-b1fb-08eb43930d49",
+  "meta": {
+    "instanceId": "7e986cd7443807e34a18cb75d6abdb6bee47f14576b4942ca62b8d682ba7c03d"
+  },
+  "id": "JoxFpZJDsGCBasHA",
+  "tags": []
+}

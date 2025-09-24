@@ -1,0 +1,60 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "random-number",
+        "responseMode": "=onReceived",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        -16
+      ],
+      "id": "691ad4d0-0bec-42ef-9113-939ca3e47af5",
+      "name": "Webhook",
+      "webhookId": "f1b82731-1854-49bd-95a6-7e3e857c9eb4",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const minRaw = $json[\"query\"][\"min\"];\nconst maxRaw = $json[\"query\"][\"max\"];\n\n// Verifica se os valores existem\nif (minRaw === undefined || maxRaw === undefined) {\n  throw new Error(\"Parâmetros 'min' e 'max' são obrigatórios.\");\n}\n\n// Verifica se são compostos apenas por dígitos (sem letras, espaços, etc.)\nconst isNumeric = (value) => /^-?\\d+$/.test(value);\n\nif (!isNumeric(minRaw) || !isNumeric(maxRaw)) {\n  throw new Error(\"Parâmetros inválidos. Apenas números inteiros são permitidos.\");\n}\n\nconst min = parseInt(minRaw);\nconst max = parseInt(maxRaw);\n\n// Verifica se min é menor que max\nif (min >= max) {\n  throw new Error(\"'min' deve ser menor que 'max'.\");\n}\n\n// Gera número aleatório\nconst random = Math.floor(Math.random() * (max - min + 1)) + min;\n\nreturn {\n  json: {\n    numeroAleatorio: random\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "4d8d0811-8ac8-4b47-9f27-e9766c3f3b3d",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d1265bcc-51a6-4bb4-a28f-65afca7e0362",
+  "meta": {
+    "instanceId": "7ef1e04442126e4b9818319c4dfe6f53266decabb8cb86e0fffec2bc2e1913de"
+  },
+  "id": "6vgg8jAHQuCYuQSB",
+  "tags": []
+}
