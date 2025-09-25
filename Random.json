@@ -1,0 +1,84 @@
+{
+  "name": "Random",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "random-number",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        48,
+        -96
+      ],
+      "id": "822f2ea8-77c6-4228-bdc6-24d3af67b3e2",
+      "name": "Webhook",
+      "webhookId": "6082dc34-a5fb-4311-842c-7020c55ec84c"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        432,
+        -96
+      ],
+      "id": "4fd0c4e7-4311-42be-810f-f7fbb927a1d8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const minRaw =  $json[\"query\"][\"min\"];\nconst maxRaw =  $json[\"query\"][\"max\"];\n\n// Verifica se os valores existem\nif (minRaw === undefined || maxRaw === undefined) {\n  throw new Error(\"Parâmetros 'min' e 'max' são obrigatórios.\");\n}\n\n// Verifica se são apenas numeros inteiros (sem letras, espaços, etc.)\nconst isNumeric = (value) => /^-?\\d+$/.test(value);\n\nif (!isNumeric(minRaw) || !isNumeric(maxRaw)) {\n  throw new Error(\"Dados inválidos. Somente números inteiros são permitidos.\");\n}\n\nconst min = parseInt(minRaw);\nconst max = parseInt(maxRaw);\n\n// Verifica se min é menor que max\nif (min >= max) {\n  throw new Error(\"'min' deve ser menor que 'max'.\");\n}\n\n// Gera número aleatório\nconst random = Math.floor(Math.random() * (max - min + 1)) + min;\n\nreturn {\n  json: {\n    numeroAleatorio: random\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        -96
+      ],
+      "id": "632d9a58-f7ea-483c-bc79-a0e57b2ae15b",
+      "name": "True Random Number Generator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "True Random Number Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True Random Number Generator": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c98ad016-0bcb-40fd-89da-1089675d6ab6",
+  "meta": {
+    "instanceId": "7e986cd7443807e34a18cb75d6abdb6bee47f14576b4942ca62b8d682ba7c03d"
+  },
+  "id": "bN22s0xEgl6cTrAq",
+  "tags": []
+}
