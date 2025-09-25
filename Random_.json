@@ -1,0 +1,120 @@
+{
+  "name": "Random",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "responseKey": "={{ $('True Random Number Generator').item.json.data }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        480,
+        192
+      ],
+      "id": "c5ad3fa3-a686-4fd1-bd86-3a88620b86f6",
+      "name": "Respond to Webhook",
+      "alwaysOutputData": true,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "path": "random-from-api",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "75d5c344-5780-4044-88e7-f479ae5a0f38",
+      "name": "Webhook",
+      "webhookId": "1b556be7-b4d2-42fd-b7b2-2f2836427abe"
+    },
+    {
+      "parameters": {
+        "url": "https://www.random.org/integers/?num=1&min=1&max=60&col=1&base=10&format=plain&rnd=new",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "num",
+              "value": "1"
+            },
+            {
+              "name": "min",
+              "value": "1"
+            },
+            {
+              "name": "max",
+              "value": "600"
+            },
+            {
+              "name": "col",
+              "value": "1"
+            },
+            {
+              "name": "base",
+              "value": "10"
+            },
+            {
+              "name": "format",
+              "value": "plain"
+            },
+            {
+              "name": "rnd",
+              "value": "new"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        192
+      ],
+      "id": "f83be2b5-fed7-458f-a603-18a3c48b60bd",
+      "name": "True Random Number Generator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "True Random Number Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True Random Number Generator": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "117a8559-ef51-4fdd-a32e-b22a43484fbf",
+  "meta": {
+    "instanceId": "71280d05c80b3ff9ceb9aa3abebc149c2350707de494995059238b43612120ad"
+  },
+  "id": "5eq1gggpCdilg6Jd",
+  "tags": []
+}
